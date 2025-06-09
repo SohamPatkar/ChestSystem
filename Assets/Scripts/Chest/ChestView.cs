@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
+using ChestSystem.Main;
 
 namespace ChestSystem.Chest
 {
@@ -30,6 +31,7 @@ namespace ChestSystem.Chest
 
         public void OnClickButton()
         {
+            GameService.Instance.UIService.GetChestController(chestController);
             chestController.OnClickChest();
         }
 

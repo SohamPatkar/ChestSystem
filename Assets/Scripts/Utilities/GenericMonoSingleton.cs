@@ -6,9 +6,9 @@ namespace ChestSystem.Utilities
 {
     public class GenericMonoSingleton<T> : MonoBehaviour where T : GenericMonoSingleton<T>
     {
-        private T instance;
+        private static T instance;
 
-        public T Instance { get { return instance; } }
+        public static T Instance { get { return instance; } }
 
         void Awake()
         {

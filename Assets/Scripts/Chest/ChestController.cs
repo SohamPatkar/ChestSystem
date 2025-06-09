@@ -39,7 +39,21 @@ namespace ChestSystem.Chest
 
         public virtual void OnClickChest()
         {
+            if (chestScriptableObject.ChestState == ChestState.Locked)
+            {
+                GameService.Instance.UIService.ShowConfirmationPanel();
+                GameService.Instance.UIService.SetGemsNeeded(GetGems());
+            }
+        }
 
+        public virtual void ChangeChestState(ChestState state)
+        {
+            chestScriptableObject.ChestState = state;
+        }
+
+        private int GetGems()
+        {
+            return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);
         }
 
         public ChestView GetChestView()

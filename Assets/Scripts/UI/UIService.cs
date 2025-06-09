@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ChestSystem.Chest;
+using ChestSystem.Main;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,12 @@ namespace ChestSystem.UI
     {
         [SerializeField] private GameObject confirmationPanel;
         [SerializeField] private TextMeshProUGUI gemsText;
+        private ChestController chestController;
+
+        public void GetChestController(ChestController chestController)
+        {
+            this.chestController = chestController;
+        }
 
         public void ShowConfirmationPanel()
         {
@@ -19,6 +26,12 @@ namespace ChestSystem.UI
         public void SetGemsNeeded(int gems)
         {
             gemsText.text = gems.ToString();
+        }
+
+        public void OpenChestWithoutGems()
+        {
+            confirmationPanel.SetActive(false);
+            chestController.ChangeChestState(ChestState.Unlocking);
         }
     }
 }

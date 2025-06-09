@@ -13,9 +13,16 @@ namespace ChestSystem.Chest
             this.chestView.SetController(this);
             CreateStateMachine();
             commonChestStateMachine.ChangeState(ChestState.Locked);
+            chestScriptableObject.ChestState = ChestState.Locked;
         }
 
         private void CreateStateMachine() => commonChestStateMachine = new CommonChestStateMachine(this);
+
+        public override void ChangeChestState(ChestState state)
+        {
+            base.ChangeChestState(state);
+            commonChestStateMachine.ChangeState(state);
+        }
 
         public override void UpdateChest()
         {

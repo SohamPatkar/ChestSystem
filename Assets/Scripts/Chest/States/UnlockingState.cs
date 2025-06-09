@@ -9,12 +9,24 @@ namespace ChestSystem.Chest
     {
         public ChestController Owner { get; set; }
         private GenericStateMachine<T> stateMachine;
+        private float timer;
 
         public UnlockingState(GenericStateMachine<T> stateMachine) => this.stateMachine = stateMachine;
 
         public void OnEnterState()
         {
+            ResetTimer();
+        }
 
+        private void ResetTimer()
+        {
+            timer = Owner.chestScriptableObject.Timer * 60f;
+        }
+
+        private void Timer()
+        {
+            timer -= Time.deltaTime;
+            Debug.Log(timer);
         }
 
         public void OnExitState()
@@ -24,7 +36,12 @@ namespace ChestSystem.Chest
 
         public void Update()
         {
+            Timer();
 
+            if (timer <= 0)
+            {
+                stateMachine.ChangeState(ChestState.Unlocked);
+            }
         }
     }
 }
