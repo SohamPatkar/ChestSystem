@@ -11,7 +11,7 @@ namespace ChestSystem.Chest
     {
         private ChestController chestController;
         [SerializeField] private Image chestSprite;
-        [SerializeField] private TextMeshProUGUI timer;
+        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI suggestedText;
 
         void Start()
@@ -33,6 +33,11 @@ namespace ChestSystem.Chest
         {
             GameService.Instance.UIService.GetChestController(chestController);
             chestController.OnClickChest();
+        }
+
+        public void SetTimerText(float time)
+        {
+            timerText.text = "" + (int)time;
         }
 
         public void SetController(ChestController controller)

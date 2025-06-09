@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chestSprite: {fileID: 5330720425835421982}
-  timer: {fileID: 7907342240834793486}
+  timerText: {fileID: 7907342240834793486}
   suggestedText: {fileID: 3470127332033580678}
 --- !u!1 &2140315184883161265
 GameObject:

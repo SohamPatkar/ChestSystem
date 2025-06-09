@@ -32,6 +32,7 @@ namespace ChestSystem.UI
         {
             confirmationPanel.SetActive(false);
             chestController.ChangeChestState(ChestState.Unlocking);
+            chestController.MoveToState(ChestState.Unlocking);
         }
     }
 }

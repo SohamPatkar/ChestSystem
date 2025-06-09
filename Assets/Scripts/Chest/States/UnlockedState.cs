@@ -13,7 +13,7 @@ namespace ChestSystem.Chest
 
         public void OnEnterState()
         {
-            Owner.ChangeChestState(ChestState.Unlocking);
+            Owner.ChangeChestState(ChestState.Unlocked);
             Owner.GetChestView().SetChestImage(Owner.chestScriptableObject.ChestOpen);
         }
 

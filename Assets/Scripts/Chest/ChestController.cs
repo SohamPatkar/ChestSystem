@@ -51,6 +51,8 @@ namespace ChestSystem.Chest
             chestScriptableObject.ChestState = state;
         }
 
+        public virtual void MoveToState(ChestState chestState) { }
+
         private int GetGems()
         {
             return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);

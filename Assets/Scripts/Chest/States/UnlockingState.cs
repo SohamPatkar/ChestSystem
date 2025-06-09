@@ -26,7 +26,7 @@ namespace ChestSystem.Chest
         private void Timer()
         {
             timer -= Time.deltaTime;
-            Debug.Log(timer);
+            Owner.GetChestView().SetTimerText(timer);
         }
 
         public void OnExitState()

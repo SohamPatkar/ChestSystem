@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ChestSystem.Chest
@@ -18,11 +19,7 @@ namespace ChestSystem.Chest
 
         private void CreateStateMachine() => commonChestStateMachine = new CommonChestStateMachine(this);
 
-        public override void ChangeChestState(ChestState state)
-        {
-            base.ChangeChestState(state);
-            commonChestStateMachine.ChangeState(state);
-        }
+        public override void MoveToState(ChestState chestState) => commonChestStateMachine.ChangeState(chestState);
 
         public override void UpdateChest()
         {
