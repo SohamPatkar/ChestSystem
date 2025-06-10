@@ -24,7 +24,7 @@ namespace ChestSystem.Chest
 
         public void Update()
         {
-            Debug.Log("Hell");
+
         }
     }
 }

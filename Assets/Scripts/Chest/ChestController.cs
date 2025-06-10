@@ -39,10 +39,17 @@ namespace ChestSystem.Chest
 
         public virtual void OnClickChest()
         {
-            if (chestScriptableObject.ChestState == ChestState.Locked)
+            switch (chestScriptableObject.ChestState)
             {
-                GameService.Instance.UIService.ShowConfirmationPanel();
-                GameService.Instance.UIService.SetGemsNeeded(GetGems());
+                case ChestState.Locked:
+                    GameService.Instance.UIService.ShowConfirmationPanel();
+                    GameService.Instance.UIService.SetGemsNeeded(GetGemsRequired());
+                    break;
+
+                case ChestState.Unlocked:
+                    GameService.Instance.AddGems(GemsToCollect());
+                    GameService.Instance.AddCoins(CoinsToCollect());
+                    break;
             }
         }
 
@@ -53,9 +60,19 @@ namespace ChestSystem.Chest
 
         public virtual void MoveToState(ChestState chestState) { }
 
-        private int GetGems()
+        private int GetGemsRequired()
+        {
+            return (int)Mathf.Ceil(chestScriptableObject.Timer / 10);
+        }
+
+        private int GemsToCollect()
         {
             return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);
+        }
+
+        private int CoinsToCollect()
+        {
+            return Random.Range(chestScriptableObject.MinCoins, chestScriptableObject.MaxCoins);
         }
 
         public ChestView GetChestView()

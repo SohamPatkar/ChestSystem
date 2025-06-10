@@ -16,6 +16,8 @@ namespace ChestSystem.Main
         [SerializeField] private GameObject chestPanel;
         [SerializeField] private ChestView chestView;
         [SerializeField] private List<ChestScriptableObject> chestScriptableObjects;
+        private int gems;
+        private int coins;
 
         private void Start()
         {
@@ -23,6 +25,18 @@ namespace ChestSystem.Main
             {
                 ChestService = new ChestService(chest, chestView, chestPanel);
             }
+        }
+
+        public void AddGems(int addGems)
+        {
+            gems += addGems;
+            Debug.Log("Gems: " + gems);
+        }
+
+        public void AddCoins(int addCoins)
+        {
+            coins += addCoins;
+            Debug.Log("Coins: " + coins);
         }
     }
 }

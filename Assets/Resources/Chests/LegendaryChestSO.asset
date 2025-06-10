@@ -17,9 +17,9 @@ MonoBehaviour:
   ChestClosed: {fileID: 21300000, guid: bbbcc0b2170e97444840a6c83ea28cec, type: 3}
   ChestOpen: {fileID: 21300000, guid: ee884744bd1611f43b64cae980faaeec, type: 3}
   ChestType: 1
-  ChestState: 3
-  MaxCoins: 0
-  MinCoins: 0
-  MaxGems: 0
-  MinGems: 0
+  ChestState: 2
+  MaxCoins: 1200
+  MinCoins: 1000
+  MaxGems: 100
+  MinGems: 80
   Timer: 0.5
