@@ -26,9 +26,17 @@ namespace ChestSystem.Main
                 ChestService = new ChestService(chest, chestView, chestPanel);
             }
 
+            InitializeCurrency();
+
             EventService.Instance.OnAddGems.AddListener(AddGems);
             EventService.Instance.OnAddCoins.AddListener(AddCoins);
             EventService.Instance.OnSubtractGems.AddListener(SubtractGems);
+        }
+
+        public void InitializeCurrency()
+        {
+            gems = 0;
+            coins = 0;
         }
 
         public int GetGems()
@@ -47,10 +55,12 @@ namespace ChestSystem.Main
         {
             gems -= subGems;
 
-            if (gems < 0)
+            if (gems <= 0 || gems < subGems)
             {
+                EventService.Instance.OnNotEnoughCoins.InvokeEvent();
                 gems = 0;
             }
+
             EventService.Instance.OnUpdateGems.InvokeEvent(gems);
             Debug.Log("Gems: " + gems);
         }

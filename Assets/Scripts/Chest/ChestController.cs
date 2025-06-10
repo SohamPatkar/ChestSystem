@@ -62,6 +62,31 @@ namespace ChestSystem.Chest
 
         public virtual void MoveToState(ChestState chestState) { }
 
+        public void OpenWithGems(ChestController chestController)
+        {
+            if (chestController == this)
+            {
+                GameService.Instance.SubtractGems(chestController.GetGemsRequired());
+
+                if (GameService.Instance.GetGems() < chestController.GetGemsRequired())
+                {
+                    return;
+                }
+
+                chestController.ChangeChestState(ChestState.Unlocked);
+                chestController.MoveToState(ChestState.Unlocked);
+            }
+        }
+
+        public void OpenWithoutGems(ChestController chestController)
+        {
+            if (chestController == this)
+            {
+                chestController?.ChangeChestState(ChestState.Unlocking);
+                chestController?.MoveToState(ChestState.Unlocking);
+            }
+        }
+
         public int GetGemsRequired()
         {
             return (int)Mathf.Ceil(chestScriptableObject.Timer / 10);

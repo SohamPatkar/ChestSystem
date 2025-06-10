@@ -1,3 +1,4 @@
+using System.Collections;
 using ChestSystem.Chest;
 using ChestSystem.Main;
 using TMPro;
@@ -11,6 +12,7 @@ namespace ChestSystem.UI
         [SerializeField] private TextMeshProUGUI gemsButtonText;
         [SerializeField] private TextMeshProUGUI coinsUIText;
         [SerializeField] private TextMeshProUGUI gemsUIText;
+        [SerializeField] private GameObject notEnoughCoinsText;
         private ChestController chestController;
 
         void Start()
@@ -19,30 +21,36 @@ namespace ChestSystem.UI
             EventService.Instance.OnShowConfirmationPanel.AddListener(ShowConfirmationPanel);
             EventService.Instance.OnUpdateGems.AddListener(SetGems);
             EventService.Instance.OnUpdateCoins.AddListener(SetCoins);
+            EventService.Instance.OnNotEnoughCoins.AddListener(ShowNotEnoughCoinsText);
         }
 
         public void GetChestController(ChestController chestController)
         {
             this.chestController = chestController;
-            Debug.Log(chestController.chestScriptableObject.name);
         }
 
-        public void ShowConfirmationPanel()
+        private void ShowNotEnoughCoinsText()
+        {
+            notEnoughCoinsText.SetActive(true);
+            StartCoroutine(HideNotEnoughCoinsText());
+        }
+
+        private void ShowConfirmationPanel()
         {
             confirmationPanel.SetActive(true);
         }
 
-        public void SetGemsNeeded(int gems)
+        private void SetGemsNeeded(int gems)
         {
             gemsButtonText.text = gems.ToString();
         }
 
-        public void SetCoins(int coins)
+        private void SetCoins(int coins)
         {
             coinsUIText.text = "Coins: " + coins;
         }
 
-        public void SetGems(int gems)
+        private void SetGems(int gems)
         {
             gemsUIText.text = "Gems: " + gems;
         }
@@ -50,22 +58,19 @@ namespace ChestSystem.UI
         public void OpenChestWithoutGems()
         {
             confirmationPanel.SetActive(false);
-            chestController?.ChangeChestState(ChestState.Unlocking);
-            chestController?.MoveToState(ChestState.Unlocking);
+            EventService.Instance.OnOpenWithoutGems.InvokeEvent(chestController);
         }
 
         public void OpenChestWithGems()
         {
             confirmationPanel.SetActive(false);
+            EventService.Instance.OnOpenWithGems.InvokeEvent(chestController);
+        }
 
-            if (GameService.Instance.GetGems() < chestController.GetGemsRequired())
-            {
-                return;
-            }
-
-            chestController.ChangeChestState(ChestState.Unlocked);
-            chestController.MoveToState(ChestState.Unlocked);
-            GameService.Instance.SubtractGems(chestController.GetGemsRequired());
+        IEnumerator HideNotEnoughCoinsText()
+        {
+            yield return new WaitForSeconds(2f);
+            notEnoughCoinsText.SetActive(false);
         }
 
         void OnDisable()
@@ -74,6 +79,7 @@ namespace ChestSystem.UI
             EventService.Instance.OnShowConfirmationPanel.RemoveListener(ShowConfirmationPanel);
             EventService.Instance.OnUpdateGems.RemoveListener(SetGems);
             EventService.Instance.OnUpdateCoins.RemoveListener(SetCoins);
+            EventService.Instance.OnNotEnoughCoins.RemoveListener(ShowNotEnoughCoinsText);
         }
     }
 }

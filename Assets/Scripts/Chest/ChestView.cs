@@ -16,7 +16,8 @@ namespace ChestSystem.Chest
 
         void Start()
         {
-
+            EventService.Instance.OnOpenWithGems.AddListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.AddListener(chestController.OpenWithoutGems);
         }
 
         void Update()
@@ -43,6 +44,12 @@ namespace ChestSystem.Chest
         public void SetController(ChestController controller)
         {
             chestController = controller;
+        }
+
+        void OnDisable()
+        {
+            EventService.Instance.OnOpenWithGems.RemoveListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.RemoveListener(chestController.OpenWithoutGems);
         }
     }
 }
