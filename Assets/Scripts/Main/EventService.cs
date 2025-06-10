@@ -26,6 +26,8 @@ namespace ChestSystem.Main
         public EventController<int> OnAddGems { get; private set; }
         public EventController<int> OnAddCoins { get; private set; }
         public EventController<int> OnSubtractGems { get; private set; }
+        public EventController<int> OnUpdateCoins { get; private set; }
+        public EventController<int> OnUpdateGems { get; private set; }
 
         public EventService()
         {
@@ -34,6 +36,8 @@ namespace ChestSystem.Main
             OnAddCoins = new EventController<int>();
             OnAddGems = new EventController<int>();
             OnSubtractGems = new EventController<int>();
+            OnUpdateCoins = new EventController<int>();
+            OnUpdateGems = new EventController<int>();
         }
 
     }

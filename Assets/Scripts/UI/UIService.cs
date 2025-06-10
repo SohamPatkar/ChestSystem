@@ -17,13 +17,14 @@ namespace ChestSystem.UI
         {
             EventService.Instance.OnSetGemsRequired.AddListener(SetGemsNeeded);
             EventService.Instance.OnShowConfirmationPanel.AddListener(ShowConfirmationPanel);
-            EventService.Instance.OnAddGems.AddListener(SetGems);
-            EventService.Instance.OnAddCoins.AddListener(SetCoins);
+            EventService.Instance.OnUpdateGems.AddListener(SetGems);
+            EventService.Instance.OnUpdateCoins.AddListener(SetCoins);
         }
 
         public void GetChestController(ChestController chestController)
         {
             this.chestController = chestController;
+            Debug.Log(chestController.chestScriptableObject.name);
         }
 
         public void ShowConfirmationPanel()
@@ -56,18 +57,23 @@ namespace ChestSystem.UI
         public void OpenChestWithGems()
         {
             confirmationPanel.SetActive(false);
-            chestController?.ChangeChestState(ChestState.Unlocked);
-            chestController?.MoveToState(ChestState.Unlocked);
-            EventService.Instance.OnSubtractGems.InvokeEvent(chestController.GetGemsRequired());
-            SetGems(GameService.Instance.GetGems());
+
+            if (GameService.Instance.GetGems() < chestController.GetGemsRequired())
+            {
+                return;
+            }
+
+            chestController.ChangeChestState(ChestState.Unlocked);
+            chestController.MoveToState(ChestState.Unlocked);
+            GameService.Instance.SubtractGems(chestController.GetGemsRequired());
         }
 
         void OnDisable()
         {
             EventService.Instance.OnSetGemsRequired.RemoveListener(SetGemsNeeded);
             EventService.Instance.OnShowConfirmationPanel.RemoveListener(ShowConfirmationPanel);
-            EventService.Instance.OnAddGems.RemoveListener(SetGems);
-            EventService.Instance.OnAddCoins.RemoveListener(SetCoins);
+            EventService.Instance.OnUpdateGems.RemoveListener(SetGems);
+            EventService.Instance.OnUpdateCoins.RemoveListener(SetCoins);
         }
     }
 }

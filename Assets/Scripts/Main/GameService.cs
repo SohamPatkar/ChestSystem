@@ -39,25 +39,26 @@ namespace ChestSystem.Main
         public void AddGems(int addGems)
         {
             gems += addGems;
-            Debug.Log("Gems: " + gems);
+            EventService.Instance.OnUpdateGems.InvokeEvent(gems);
+            Debug.Log("Gems: " + addGems);
         }
 
         public void SubtractGems(int subGems)
         {
-            if (gems < subGems)
-            {
-                Debug.Log("Not Enough Gems");
-                return;
-            }
-
             gems -= subGems;
+
+            if (gems < 0)
+            {
+                gems = 0;
+            }
+            EventService.Instance.OnUpdateGems.InvokeEvent(gems);
             Debug.Log("Gems: " + gems);
         }
 
         public void AddCoins(int addCoins)
         {
             coins += addCoins;
-            Debug.Log("Coins: " + coins);
+            EventService.Instance.OnUpdateCoins.InvokeEvent(coins);
         }
 
         private void OnDisable()

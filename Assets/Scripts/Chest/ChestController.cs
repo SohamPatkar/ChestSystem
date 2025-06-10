@@ -49,6 +49,8 @@ namespace ChestSystem.Chest
                 case ChestState.Unlocked:
                     EventService.Instance.OnAddGems.InvokeEvent(GemsToCollect());
                     EventService.Instance.OnAddCoins.InvokeEvent(CoinsToCollect());
+                    ChangeChestState(ChestState.Collected);
+                    MoveToState(ChestState.Collected);
                     break;
             }
         }
@@ -67,6 +69,7 @@ namespace ChestSystem.Chest
 
         private int GemsToCollect()
         {
+            Debug.Log("Triggered");
             return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);
         }
 

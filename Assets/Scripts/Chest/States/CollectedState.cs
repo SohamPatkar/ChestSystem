@@ -15,7 +15,7 @@ namespace ChestSystem.Chest
 
         public void OnEnterState()
         {
-
+            Object.Destroy(Owner.GetChestView().gameObject);
         }
 
         public void OnExitState()
