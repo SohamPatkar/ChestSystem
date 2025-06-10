@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using ChestSystem.Events;
+using UnityEngine;
+
+namespace ChestSystem.Main
+{
+    public class EventService
+    {
+        private static EventService instance;
+
+        public static EventService Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new EventService();
+                }
+                return instance;
+            }
+        }
+
+        public EventController<int> OnSetGemsRequired { get; private set; }
+        public EventController OnShowConfirmationPanel { get; private set; }
+        public EventController<int> OnAddGems { get; private set; }
+        public EventController<int> OnAddCoins { get; private set; }
+        public EventController<int> OnSubtractGems { get; private set; }
+
+        public EventService()
+        {
+            OnShowConfirmationPanel = new EventController();
+            OnSetGemsRequired = new EventController<int>();
+            OnAddCoins = new EventController<int>();
+            OnAddGems = new EventController<int>();
+            OnSubtractGems = new EventController<int>();
+        }
+
+    }
+}
+
+

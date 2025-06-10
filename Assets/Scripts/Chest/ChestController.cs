@@ -42,13 +42,13 @@ namespace ChestSystem.Chest
             switch (chestScriptableObject.ChestState)
             {
                 case ChestState.Locked:
-                    GameService.Instance.UIService.ShowConfirmationPanel();
-                    GameService.Instance.UIService.SetGemsNeeded(GetGemsRequired());
+                    EventService.Instance.OnShowConfirmationPanel.InvokeEvent();
+                    EventService.Instance.OnSetGemsRequired.InvokeEvent(GetGemsRequired());
                     break;
 
                 case ChestState.Unlocked:
-                    GameService.Instance.AddGems(GemsToCollect());
-                    GameService.Instance.AddCoins(CoinsToCollect());
+                    EventService.Instance.OnAddGems.InvokeEvent(GemsToCollect());
+                    EventService.Instance.OnAddCoins.InvokeEvent(CoinsToCollect());
                     break;
             }
         }
@@ -60,7 +60,7 @@ namespace ChestSystem.Chest
 
         public virtual void MoveToState(ChestState chestState) { }
 
-        private int GetGemsRequired()
+        public int GetGemsRequired()
         {
             return (int)Mathf.Ceil(chestScriptableObject.Timer / 10);
         }
