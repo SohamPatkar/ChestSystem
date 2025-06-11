@@ -16,7 +16,6 @@ namespace ChestSystem.Chest
 
         public void OnEnterState()
         {
-            GameService.Instance.ChestService.RemoveChest(Owner);
             Object.Destroy(Owner.GetChestView().gameObject);
         }
 

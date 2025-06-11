@@ -80,7 +80,6 @@ namespace ChestSystem.Main
         {
             gems += addGems;
             EventService.Instance.OnUpdateGems.InvokeEvent(gems);
-            Debug.Log("Gems: " + addGems);
         }
 
         public void SubtractGems(int subGems)
@@ -94,7 +93,6 @@ namespace ChestSystem.Main
             }
 
             EventService.Instance.OnUpdateGems.InvokeEvent(gems);
-            Debug.Log("Gems: " + gems);
         }
 
         public void AddCoins(int addCoins)

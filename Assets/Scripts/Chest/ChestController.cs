@@ -39,15 +39,16 @@ namespace ChestSystem.Chest
 
         public virtual void OnClickChest()
         {
-            if (chestScriptableObject.ChestState != ChestState.Unlocking && GameService.Instance.ChestService.IsAnyChestUnlocking())
-            {
-                Debug.Log("Please wait for the chest to be unlocked");
-                return;
-            }
-
             switch (chestScriptableObject.ChestState)
             {
                 case ChestState.Locked:
+
+                    if (GameService.Instance.ChestService.IsAnyChestUnlocking())
+                    {
+                        GameService.Instance.ChestService.EnqueueChest(this);
+                        return;
+                    }
+
                     EventService.Instance.OnShowConfirmationPanel.InvokeEvent();
                     EventService.Instance.OnSetGemsRequired.InvokeEvent(GetGemsRequired());
                     break;
@@ -88,8 +89,7 @@ namespace ChestSystem.Chest
         {
             if (chestController == this)
             {
-                chestController?.ChangeChestState(ChestState.Unlocking);
-                chestController?.MoveToState(ChestState.Unlocking);
+                GameService.Instance.ChestService.EnqueueChest(this);
             }
         }
 

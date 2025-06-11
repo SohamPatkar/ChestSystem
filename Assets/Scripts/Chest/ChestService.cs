@@ -8,6 +8,8 @@ namespace ChestSystem.Chest
     {
         private ChestController chestController;
         private List<ChestController> chestControllers;
+        private Queue<ChestController> unlockQueue = new Queue<ChestController>();
+        private ChestController currentlyUnlocking = null;
         public ChestService() { chestControllers = new List<ChestController>(); }
 
         public void CreateChest(ChestScriptableObject chestScriptableObject, ChestView chestView, GameObject chestPanel)
@@ -34,6 +36,39 @@ namespace ChestSystem.Chest
                     chestController = new EpicChest(chestScriptableObject, chestView, chestPanel);
                     chestControllers.Add(chestController);
                     break;
+            }
+        }
+
+        public void EnqueueChest(ChestController chestController)
+        {
+            if (currentlyUnlocking == null)
+            {
+                StartUnlocking(chestController);
+            }
+            else
+            {
+                Debug.Log("Added to queue");
+                unlockQueue.Enqueue(chestController);
+            }
+        }
+
+        private void StartUnlocking(ChestController chest)
+        {
+            currentlyUnlocking = chest;
+            chest.ChangeChestState(ChestState.Unlocking);
+            chest.MoveToState(ChestState.Unlocking);
+        }
+
+        public void OnChestUnlocked(ChestController unlockedChest)
+        {
+            if (currentlyUnlocking == unlockedChest)
+            {
+                currentlyUnlocking = null;
+
+                if (unlockQueue.Count > 0)
+                {
+                    StartUnlocking(unlockQueue.Dequeue());
+                }
             }
         }
 

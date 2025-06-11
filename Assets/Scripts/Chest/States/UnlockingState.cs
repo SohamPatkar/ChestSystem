@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ChestSystem.Utilities;
+using ChestSystem.Main;
 using UnityEngine;
 
 namespace ChestSystem.Chest
@@ -26,21 +27,30 @@ namespace ChestSystem.Chest
         private void Timer()
         {
             timer -= Time.deltaTime;
-            Owner.GetChestView().SetTimerText(timer);
+            Owner.GetChestView().SetTimerText(FormatTime(timer));
+        }
+
+        private string FormatTime(float time)
+        {
+            int minutes = Mathf.FloorToInt(time / 60f);
+            int seconds = Mathf.FloorToInt(time % 60f);
+            return string.Format("{0:00}:{1:00}", minutes, seconds);
         }
 
         public void OnExitState()
         {
-
+            GameService.Instance.ChestService.RemoveChest(Owner);
         }
 
         public void Update()
         {
             Timer();
 
-            if (timer <= 0)
+            if (timer <= 0f)
             {
+                timer = 0f;
                 stateMachine.ChangeState(ChestState.Unlocked);
+                GameService.Instance.ChestService.OnChestUnlocked(Owner);
             }
         }
     }

@@ -36,9 +36,9 @@ namespace ChestSystem.Chest
             chestController.OnClickChest();
         }
 
-        public void SetTimerText(float time)
+        public void SetTimerText(string time)
         {
-            timerText.text = "" + (int)time;
+            timerText.text = time;
         }
 
         public void SetController(ChestController controller)
