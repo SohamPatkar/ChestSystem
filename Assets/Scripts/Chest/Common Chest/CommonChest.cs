@@ -19,8 +19,6 @@ namespace ChestSystem.Chest
 
         private void CreateStateMachine() => commonChestStateMachine = new CommonChestStateMachine(this);
 
-
-
         public override void MoveToState(ChestState chestState) => commonChestStateMachine.ChangeState(chestState);
 
         public override void UpdateChest()

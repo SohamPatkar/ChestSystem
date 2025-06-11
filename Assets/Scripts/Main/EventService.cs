@@ -22,7 +22,9 @@ namespace ChestSystem.Main
             }
         }
 
+        public EventController OnCreateChests { get; private set; }
         public EventController OnNotEnoughCoins { get; private set; }
+        public EventController OnNotEnoughSlots { get; private set; }
         public EventController OnShowConfirmationPanel { get; private set; }
         public EventController<int> OnSetGemsRequired { get; private set; }
         public EventController<int> OnAddGems { get; private set; }
@@ -35,7 +37,9 @@ namespace ChestSystem.Main
 
         public EventService()
         {
+            OnCreateChests = new EventController();
             OnNotEnoughCoins = new EventController();
+            OnNotEnoughSlots = new EventController();
             OnShowConfirmationPanel = new EventController();
             OnSetGemsRequired = new EventController<int>();
             OnAddCoins = new EventController<int>();

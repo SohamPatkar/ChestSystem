@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using ChestSystem.Chest;
 using ChestSystem.Main;
 using TMPro;
@@ -9,10 +10,16 @@ namespace ChestSystem.UI
     public class UIService : MonoBehaviour
     {
         [SerializeField] private GameObject confirmationPanel;
+        [SerializeField] private GameObject chestPanel;
         [SerializeField] private TextMeshProUGUI gemsButtonText;
         [SerializeField] private TextMeshProUGUI coinsUIText;
         [SerializeField] private TextMeshProUGUI gemsUIText;
         [SerializeField] private GameObject notEnoughCoinsText;
+        [SerializeField] private GameObject notEnoughSlotsText;
+
+        [SerializeField] private GameObject slotPrefab;
+        [SerializeField] private List<GameObject> slots;
+
         private ChestController chestController;
 
         void Start()
@@ -21,18 +28,24 @@ namespace ChestSystem.UI
             EventService.Instance.OnShowConfirmationPanel.AddListener(ShowConfirmationPanel);
             EventService.Instance.OnUpdateGems.AddListener(SetGems);
             EventService.Instance.OnUpdateCoins.AddListener(SetCoins);
+            EventService.Instance.OnNotEnoughSlots.AddListener(ShowNotEnoughSlotsText);
             EventService.Instance.OnNotEnoughCoins.AddListener(ShowNotEnoughCoinsText);
         }
 
-        public void GetChestController(ChestController chestController)
-        {
-            this.chestController = chestController;
-        }
+        public List<GameObject> ReturnSlots() { return slots; }
+
+        public void GetChestController(ChestController chestController) { this.chestController = chestController; }
 
         private void ShowNotEnoughCoinsText()
         {
             notEnoughCoinsText.SetActive(true);
-            StartCoroutine(HideNotEnoughCoinsText());
+            StartCoroutine(HideText(notEnoughCoinsText));
+        }
+
+        private void ShowNotEnoughSlotsText()
+        {
+            notEnoughSlotsText.SetActive(true);
+            StartCoroutine(HideText(notEnoughSlotsText));
         }
 
         private void ShowConfirmationPanel()
@@ -55,6 +68,11 @@ namespace ChestSystem.UI
             gemsUIText.text = "Gems: " + gems;
         }
 
+        public void CreateASlot()
+        {
+            slots.Add(Instantiate(slotPrefab, chestPanel.transform));
+        }
+
         public void OpenChestWithoutGems()
         {
             confirmationPanel.SetActive(false);
@@ -67,10 +85,15 @@ namespace ChestSystem.UI
             EventService.Instance.OnOpenWithGems.InvokeEvent(chestController);
         }
 
-        IEnumerator HideNotEnoughCoinsText()
+        public void CreateChests()
+        {
+            EventService.Instance.OnCreateChests.InvokeEvent();
+        }
+
+        IEnumerator HideText(GameObject text)
         {
             yield return new WaitForSeconds(2f);
-            notEnoughCoinsText.SetActive(false);
+            text.SetActive(false);
         }
 
         void OnDisable()
@@ -80,6 +103,7 @@ namespace ChestSystem.UI
             EventService.Instance.OnUpdateGems.RemoveListener(SetGems);
             EventService.Instance.OnUpdateCoins.RemoveListener(SetCoins);
             EventService.Instance.OnNotEnoughCoins.RemoveListener(ShowNotEnoughCoinsText);
+            EventService.Instance.OnNotEnoughSlots.RemoveListener(ShowNotEnoughSlotsText);
         }
     }
 }

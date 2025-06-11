@@ -39,6 +39,12 @@ namespace ChestSystem.Chest
 
         public virtual void OnClickChest()
         {
+            if (chestScriptableObject.ChestState != ChestState.Unlocking && GameService.Instance.ChestService.IsAnyChestUnlocking())
+            {
+                Debug.Log("Please wait for the chest to be unlocked");
+                return;
+            }
+
             switch (chestScriptableObject.ChestState)
             {
                 case ChestState.Locked:

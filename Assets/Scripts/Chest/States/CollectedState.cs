@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ChestSystem.Main;
 using ChestSystem.Utilities;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace ChestSystem.Chest
 
         public void OnEnterState()
         {
+            GameService.Instance.ChestService.RemoveChest(Owner);
             Object.Destroy(Owner.GetChestView().gameObject);
         }
 
