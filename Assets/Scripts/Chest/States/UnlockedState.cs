@@ -21,7 +21,7 @@ namespace ChestSystem.Chest
 
         public void OnExitState()
         {
-
+            GameService.Instance.ChestService.RemoveChestFromActiveChest(Owner);
         }
 
         public void Update()
