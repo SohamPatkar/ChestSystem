@@ -85,7 +85,7 @@ namespace ChestSystem.Chest
                     return;
                 }
 
-                GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
+                GameService.Instance.ChestService.PushUndo(new UndoUnlocked(this));
                 chestController.ChangeChestState(ChestState.Unlocked);
                 chestController.MoveToState(ChestState.Unlocked);
             }
