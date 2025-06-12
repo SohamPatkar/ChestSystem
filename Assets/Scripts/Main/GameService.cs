@@ -26,14 +26,14 @@ namespace ChestSystem.Main
 
         private void Start()
         {
-            ChestService = new ChestService();
-
-            Initialize();
-
             EventService.Instance.OnAddGems.AddListener(AddGems);
             EventService.Instance.OnAddCoins.AddListener(AddCoins);
             EventService.Instance.OnSubtractGems.AddListener(SubtractGems);
             EventService.Instance.OnCreateChests.AddListener(CreateChests);
+
+            ChestService = new ChestService();
+
+            Initialize();
         }
 
         public void CreateChests()

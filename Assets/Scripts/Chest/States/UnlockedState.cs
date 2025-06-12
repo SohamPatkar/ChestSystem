@@ -16,6 +16,7 @@ namespace ChestSystem.Chest
         {
             Owner.ChangeChestState(ChestState.Unlocked);
             Owner.GetChestView().SetChestImage(Owner.chestScriptableObject.ChestOpen);
+            Owner.GetChestView().SetSuggestedText("Collect");
         }
 
         public void OnExitState()

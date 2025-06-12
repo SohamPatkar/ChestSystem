@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ChestSystem.Main;
 using UnityEngine;
 
 namespace ChestSystem.Chest
@@ -8,9 +9,16 @@ namespace ChestSystem.Chest
     {
         private ChestController chestController;
         private List<ChestController> chestControllers;
-        private Queue<ChestController> unlockQueue = new Queue<ChestController>();
+        private Stack<IUndoAction> undoState;
+        private Queue<ChestController> unlockQueue;
         private ChestController currentlyUnlocking = null;
-        public ChestService() { chestControllers = new List<ChestController>(); }
+
+        public ChestService()
+        {
+            chestControllers = new List<ChestController>();
+            undoState = new Stack<IUndoAction>();
+            unlockQueue = new Queue<ChestController>();
+        }
 
         public void CreateChest(ChestScriptableObject chestScriptableObject, ChestView chestView, GameObject chestPanel)
         {
@@ -45,10 +53,31 @@ namespace ChestSystem.Chest
             {
                 StartUnlocking(chestController);
             }
+            else if (unlockQueue.Count == 0)
+            {
+                EventService.Instance.OnQueueAction.InvokeEvent("Added to Queue");
+                unlockQueue.Enqueue(chestController);
+            }
             else
             {
-                Debug.Log("Added to queue");
-                unlockQueue.Enqueue(chestController);
+                EventService.Instance.OnQueueAction.InvokeEvent("Queue is full");
+            }
+        }
+
+        public void PushUndo(IUndoAction undoAction)
+        {
+            undoState.Push(undoAction);
+        }
+
+        public void UndoAction()
+        {
+            if (undoState.Count > 0)
+            {
+                undoState.Pop().Undo();
+            }
+            else
+            {
+                EventService.Instance.OnQueueAction.InvokeEvent("Nothing to Undo");
             }
         }
 
@@ -84,11 +113,23 @@ namespace ChestSystem.Chest
             return false;
         }
 
-        public void RemoveChest(ChestController controller)
+        public void RemoveChestFromActiveChest(ChestController controller)
         {
             if (chestControllers.Contains(controller))
+            {
                 chestControllers.Remove(controller);
+            }
         }
+
+        public void DequeueChest(ChestController controller)
+        {
+            if (unlockQueue.Contains(controller))
+            {
+                EventService.Instance.OnQueueAction.InvokeEvent("Removed from the queue");
+                unlockQueue.Dequeue();
+            }
+        }
+
     }
 }
 

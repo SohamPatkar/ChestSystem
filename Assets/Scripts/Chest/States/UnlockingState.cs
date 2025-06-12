@@ -27,19 +27,20 @@ namespace ChestSystem.Chest
         private void Timer()
         {
             timer -= Time.deltaTime;
-            Owner.GetChestView().SetTimerText(FormatTime(timer));
+
+            if (timer < 0)
+            {
+                timer = 0f;
+            }
+
+            Owner.GetChestView().SetTimerText(Owner.FormatTime(timer));
         }
 
-        private string FormatTime(float time)
-        {
-            int minutes = Mathf.FloorToInt(time / 60f);
-            int seconds = Mathf.FloorToInt(time % 60f);
-            return string.Format("{0:00}:{1:00}", minutes, seconds);
-        }
+
 
         public void OnExitState()
         {
-            GameService.Instance.ChestService.RemoveChest(Owner);
+            GameService.Instance.ChestService.RemoveChestFromActiveChest(Owner);
         }
 
         public void Update()
@@ -48,8 +49,8 @@ namespace ChestSystem.Chest
 
             if (timer <= 0f)
             {
-                timer = 0f;
                 stateMachine.ChangeState(ChestState.Unlocked);
+                GameService.Instance.ChestService.PushUndo(new UndoUnlocked(Owner));
                 GameService.Instance.ChestService.OnChestUnlocked(Owner);
             }
         }

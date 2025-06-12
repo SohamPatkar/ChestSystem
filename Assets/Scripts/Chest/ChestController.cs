@@ -42,13 +42,6 @@ namespace ChestSystem.Chest
             switch (chestScriptableObject.ChestState)
             {
                 case ChestState.Locked:
-
-                    if (GameService.Instance.ChestService.IsAnyChestUnlocking())
-                    {
-                        GameService.Instance.ChestService.EnqueueChest(this);
-                        return;
-                    }
-
                     EventService.Instance.OnShowConfirmationPanel.InvokeEvent();
                     EventService.Instance.OnSetGemsRequired.InvokeEvent(GetGemsRequired());
                     break;
@@ -68,6 +61,18 @@ namespace ChestSystem.Chest
         }
 
         public virtual void MoveToState(ChestState chestState) { }
+
+        public float TimerText()
+        {
+            return chestScriptableObject.Timer * 60f;
+        }
+
+        public string FormatTime(float time)
+        {
+            int minutes = Mathf.FloorToInt(time / 60f);
+            int seconds = Mathf.FloorToInt(time % 60f);
+            return string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
 
         public void OpenWithGems(ChestController chestController)
         {
@@ -90,17 +95,17 @@ namespace ChestSystem.Chest
             if (chestController == this)
             {
                 GameService.Instance.ChestService.EnqueueChest(this);
+                GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
             }
         }
 
-        public int GetGemsRequired()
+        private int GetGemsRequired()
         {
             return (int)Mathf.Ceil(chestScriptableObject.Timer / 10);
         }
 
         private int GemsToCollect()
         {
-            Debug.Log("Triggered");
             return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);
         }
 

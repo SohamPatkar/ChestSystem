@@ -18,6 +18,7 @@ namespace ChestSystem.Chest
         {
             EventService.Instance.OnOpenWithGems.AddListener(chestController.OpenWithGems);
             EventService.Instance.OnOpenWithoutGems.AddListener(chestController.OpenWithoutGems);
+            SetTimerText(chestController.FormatTime(chestController.TimerText()));
         }
 
         void Update()
@@ -39,6 +40,11 @@ namespace ChestSystem.Chest
         public void SetTimerText(string time)
         {
             timerText.text = time;
+        }
+
+        public void SetSuggestedText(string text)
+        {
+            suggestedText.text = text;
         }
 
         public void SetController(ChestController controller)
