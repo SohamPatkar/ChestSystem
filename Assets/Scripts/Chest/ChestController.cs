@@ -42,13 +42,15 @@ namespace ChestSystem.Chest
             switch (chestScriptableObject.ChestState)
             {
                 case ChestState.Locked:
-                    GameService.Instance.UIService.ShowConfirmationPanel();
-                    GameService.Instance.UIService.SetGemsNeeded(GetGemsRequired());
+                    EventService.Instance.OnShowConfirmationPanel.InvokeEvent();
+                    EventService.Instance.OnSetGemsRequired.InvokeEvent(GetGemsRequired());
                     break;
 
                 case ChestState.Unlocked:
-                    GameService.Instance.AddGems(GemsToCollect());
-                    GameService.Instance.AddCoins(CoinsToCollect());
+                    EventService.Instance.OnAddGems.InvokeEvent(GemsToCollect());
+                    EventService.Instance.OnAddCoins.InvokeEvent(CoinsToCollect());
+                    ChangeChestState(ChestState.Collected);
+                    MoveToState(ChestState.Collected);
                     break;
             }
         }
@@ -59,6 +61,45 @@ namespace ChestSystem.Chest
         }
 
         public virtual void MoveToState(ChestState chestState) { }
+
+        public float TimerText()
+        {
+            return chestScriptableObject.Timer * 60f;
+        }
+
+        public string FormatTime(float time)
+        {
+            int minutes = Mathf.FloorToInt(time / 60f);
+            int seconds = Mathf.FloorToInt(time % 60f);
+            return string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+
+        public void OpenWithGems(ChestController chestController)
+        {
+            if (chestController == this)
+            {
+                GameService.Instance.SubtractGems(chestController.GetGemsRequired());
+
+                if (GameService.Instance.GetGems() < chestController.GetGemsRequired())
+                {
+                    return;
+                }
+
+                GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
+                chestController.ChangeChestState(ChestState.Unlocked);
+                chestController.MoveToState(ChestState.Unlocked);
+            }
+        }
+
+        public void OpenWithoutGems(ChestController chestController)
+        {
+            if (chestController == this)
+            {
+                chestView.SetSuggestedText("Queued");
+                GameService.Instance.ChestService.EnqueueChest(this);
+                GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
+            }
+        }
 
         private int GetGemsRequired()
         {

@@ -10,11 +10,16 @@ namespace ChestSystem.Chest
         public ChestController Owner { get; set; }
         private GenericStateMachine<T> stateMachine;
 
-        public LockedState(GenericStateMachine<T> stateMachine) => this.stateMachine = stateMachine;
+        public LockedState(GenericStateMachine<T> stateMachine)
+        {
+            this.stateMachine = stateMachine;
+        }
 
         public void OnEnterState()
         {
             Owner.GetChestView().SetChestImage(Owner.chestScriptableObject.ChestClosed);
+            Owner.GetChestView().SetSuggestedText("Open");
+            Owner.GetChestView().SetTimerText(Owner.FormatTime(Owner.TimerText()));
         }
 
         public void OnExitState()

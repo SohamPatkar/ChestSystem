@@ -16,7 +16,9 @@ namespace ChestSystem.Chest
 
         void Start()
         {
-
+            EventService.Instance.OnOpenWithGems.AddListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.AddListener(chestController.OpenWithoutGems);
+            SetTimerText(chestController.FormatTime(chestController.TimerText()));
         }
 
         void Update()
@@ -35,14 +37,25 @@ namespace ChestSystem.Chest
             chestController.OnClickChest();
         }
 
-        public void SetTimerText(float time)
+        public void SetTimerText(string time)
         {
-            timerText.text = "" + (int)time;
+            timerText.text = time;
+        }
+
+        public void SetSuggestedText(string text)
+        {
+            suggestedText.text = text;
         }
 
         public void SetController(ChestController controller)
         {
             chestController = controller;
+        }
+
+        void OnDisable()
+        {
+            EventService.Instance.OnOpenWithGems.RemoveListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.RemoveListener(chestController.OpenWithoutGems);
         }
     }
 }
