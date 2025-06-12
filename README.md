@@ -26,4 +26,15 @@ Clean encapsulation of chest behavior.
 # Command Pattern (ChestService / IUndoAction)
 You store command objects on a stack (undoState) for undo functionality.
 
-Possibly implemented IUndoAction or similar interface for Undo().
+Implemented IUndoAction or similar interface for Undo().
+
+# Flow 
+
+GameService -> Adding Gems, Subtracting Gems and Creating chests through Chest Service
+
+ChestService -> ChestControllers: 4 types Rare, Legendary, Epic, Common -> ChestView
+
+EventService -> UI
+
+
+
