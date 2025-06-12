@@ -17,6 +17,7 @@ namespace ChestSystem.Chest
         public void OnEnterState()
         {
             ResetTimer();
+            Owner.GetChestView().SetSuggestedText("Opening");
         }
 
         private void ResetTimer()

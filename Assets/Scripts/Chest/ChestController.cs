@@ -94,6 +94,7 @@ namespace ChestSystem.Chest
         {
             if (chestController == this)
             {
+                chestView.SetSuggestedText("Queued");
                 GameService.Instance.ChestService.EnqueueChest(this);
                 GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
             }
