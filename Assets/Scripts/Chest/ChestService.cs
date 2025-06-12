@@ -67,13 +67,23 @@ namespace ChestSystem.Chest
         public void PushUndo(IUndoAction undoAction)
         {
             undoState.Push(undoAction);
+            Debug.Log(undoState.Count);
         }
 
         public void UndoAction()
         {
             if (undoState.Count > 0)
             {
-                undoState.Pop().Undo();
+                IUndoAction action = undoState.Pop();
+
+                if (chestControllers.Contains(action.GetChestController()))
+                {
+                    action?.Undo();
+                }
+                else
+                {
+                    EventService.Instance.OnQueueAction.InvokeEvent("Nothing to Undo");
+                }
             }
             else
             {

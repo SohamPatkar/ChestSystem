@@ -69,12 +69,12 @@ namespace ChestSystem.UI
 
         private void SetCoins(int coins)
         {
-            coinsUIText.text = "Coins: " + coins;
+            coinsUIText.text = "" + coins;
         }
 
         private void SetGems(int gems)
         {
-            gemsUIText.text = "Gems: " + gems;
+            gemsUIText.text = "" + gems;
         }
 
         public void CreateASlot()

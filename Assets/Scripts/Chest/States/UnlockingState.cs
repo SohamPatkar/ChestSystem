@@ -37,8 +37,6 @@ namespace ChestSystem.Chest
             Owner.GetChestView().SetTimerText(Owner.FormatTime(timer));
         }
 
-
-
         public void OnExitState()
         {
             GameService.Instance.ChestService.RemoveChestFromActiveChest(Owner);

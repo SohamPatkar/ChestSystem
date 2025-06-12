@@ -13,6 +13,11 @@ namespace ChestSystem.Chest
             this.chestController = chestController;
         }
 
+        public ChestController GetChestController()
+        {
+            return chestController;
+        }
+
         public void Undo()
         {
             chestController.ChangeChestState(ChestState.Locked);

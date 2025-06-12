@@ -22,4 +22,4 @@ MonoBehaviour:
   MinCoins: 1000
   MaxGems: 100
   MinGems: 80
-  Timer: 0.5
+  Timer: 30

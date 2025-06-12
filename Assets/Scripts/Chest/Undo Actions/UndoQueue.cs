@@ -15,9 +15,15 @@ namespace ChestSystem.Chest
             this.chestController = chestController;
         }
 
+        public ChestController GetChestController()
+        {
+            return chestController;
+        }
+
         public void Undo()
         {
             chestService.DequeueChest(chestController);
+            chestController.GetChestView().SetSuggestedText("Open");
         }
     }
 }
