@@ -12,12 +12,12 @@ namespace ChestSystem.Chest
         public Sprite ChestClosed;
         public Sprite ChestOpen;
         public ChestType ChestType;
-        public ChestState chestState;
+        public ChestState ChestState;
         public int MaxCoins;
         public int MinCoins;
         public int MaxGems;
         public int MinGems;
-        public int Timer;
+        public float Timer;
     }
 }
 

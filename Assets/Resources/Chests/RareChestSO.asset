@@ -16,8 +16,10 @@ MonoBehaviour:
   Name: Rare Chest
   ChestClosed: {fileID: 21300000, guid: 05f98a1b46b29e24eac82e507c2ef20f, type: 3}
   ChestOpen: {fileID: 21300000, guid: e192aad297a572c47bad1e4b91fd944d, type: 3}
-  MaxCoins: 0
-  MinCoins: 0
-  MaxGems: 0
-  MinGems: 0
-  Timer: 0
+  ChestType: 0
+  ChestState: 1
+  MaxCoins: 500
+  MinCoins: 300
+  MaxGems: 40
+  MinGems: 20
+  Timer: 0.15

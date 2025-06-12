@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
+using ChestSystem.Main;
 
 namespace ChestSystem.Chest
 {
@@ -10,12 +11,14 @@ namespace ChestSystem.Chest
     {
         private ChestController chestController;
         [SerializeField] private Image chestSprite;
-        [SerializeField] private TextMeshProUGUI timer;
+        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI suggestedText;
 
         void Start()
         {
-
+            EventService.Instance.OnOpenWithGems.AddListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.AddListener(chestController.OpenWithoutGems);
+            SetTimerText(chestController.FormatTime(chestController.TimerText()));
         }
 
         void Update()
@@ -30,12 +33,29 @@ namespace ChestSystem.Chest
 
         public void OnClickButton()
         {
+            GameService.Instance.UIService.GetChestController(chestController);
             chestController.OnClickChest();
+        }
+
+        public void SetTimerText(string time)
+        {
+            timerText.text = time;
+        }
+
+        public void SetSuggestedText(string text)
+        {
+            suggestedText.text = text;
         }
 
         public void SetController(ChestController controller)
         {
             chestController = controller;
+        }
+
+        void OnDisable()
+        {
+            EventService.Instance.OnOpenWithGems.RemoveListener(chestController.OpenWithGems);
+            EventService.Instance.OnOpenWithoutGems.RemoveListener(chestController.OpenWithoutGems);
         }
     }
 }
