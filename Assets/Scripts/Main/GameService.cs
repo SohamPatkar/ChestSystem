@@ -1,47 +1,49 @@
-using System.Collections;
 using System.Collections.Generic;
 using ChestSystem.Chest;
+using ChestSystem.Currency;
+using ChestSystem.Slots;
 using ChestSystem.UI;
 using ChestSystem.Utilities;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+
 
 namespace ChestSystem.Main
 {
     public class GameService : GenericMonoSingleton<GameService>
     {
         public ChestService ChestService { get; private set; }
-        [SerializeField] private UIService uIService;
         public UIService UIService { get { return uIService; } }
+        public CurrencyService CurrencyService;
+        public SlotManager SlotManager { get { return slotManager; } }
 
+        [SerializeField] private UIService uIService;
+        [SerializeField] private SlotManager slotManager;
         [SerializeField] private GameObject chestPanel;
         [SerializeField] private ChestView chestView;
         [SerializeField] private List<ChestScriptableObject> chestScriptableObjects;
 
         private List<GameObject> slots;
         private List<ChestController> chests;
-        private int gems;
-        private int coins;
         private int slotCount;
 
         private void Start()
         {
-            EventService.Instance.OnAddGems.AddListener(AddGems);
-            EventService.Instance.OnAddCoins.AddListener(AddCoins);
-            EventService.Instance.OnSubtractGems.AddListener(SubtractGems);
+            CurrencyService = new CurrencyService();
+
+            EventService.Instance.OnAddGems.AddListener(CurrencyService.AddGems);
+            EventService.Instance.OnAddCoins.AddListener(CurrencyService.AddCoins);
+            EventService.Instance.OnSubtractGems.AddListener(CurrencyService.SubtractGems);
             EventService.Instance.OnCreateChests.AddListener(CreateChests);
 
             ChestService = new ChestService();
-
-            Initialize();
         }
 
         public void CreateChests()
         {
-            slots = UIService.ReturnSlots();
-            slotCount = UIService.ReturnSlots().Count;
+            slots = SlotManager.ReturnSlots();
+            slotCount = slots.Count;
 
-            if (GetSlots() >= slotCount)
+            if (SlotManager.GetSlots() >= slotCount)
             {
                 EventService.Instance.OnNotEnoughSlots.InvokeEvent();
                 return;
@@ -49,63 +51,16 @@ namespace ChestSystem.Main
 
             ChestScriptableObject randomChestData = Instantiate(chestScriptableObjects[Random.Range(0, chestScriptableObjects.Count)]);
 
-            ChestService.CreateChest(randomChestData, chestView, slots[GetSlots()]);
+            ChestService.CreateChest(randomChestData, chestView, slots[SlotManager.GetSlots()]);
         }
 
-        public void Initialize()
-        {
-            gems = 0;
-            coins = 0;
-        }
 
-        private int GetSlots()
-        {
-            for (int i = 0; i < slotCount; i++)
-            {
-                if (slots[i].transform.childCount == 0)
-                {
-                    return i;
-                }
-            }
-
-            return slotCount;
-        }
-
-        public int GetGems()
-        {
-            return gems;
-        }
-
-        public void AddGems(int addGems)
-        {
-            gems += addGems;
-            EventService.Instance.OnUpdateGems.InvokeEvent(gems);
-        }
-
-        public void SubtractGems(int subGems)
-        {
-            gems -= subGems;
-
-            if (gems <= 0 || gems < subGems)
-            {
-                EventService.Instance.OnNotEnoughCoins.InvokeEvent();
-                gems = 0;
-            }
-
-            EventService.Instance.OnUpdateGems.InvokeEvent(gems);
-        }
-
-        public void AddCoins(int addCoins)
-        {
-            coins += addCoins;
-            EventService.Instance.OnUpdateCoins.InvokeEvent(coins);
-        }
 
         private void OnDisable()
         {
-            EventService.Instance.OnAddGems.RemoveListener(AddGems);
-            EventService.Instance.OnAddCoins.RemoveListener(AddCoins);
-            EventService.Instance.OnSubtractGems.RemoveListener(SubtractGems);
+            EventService.Instance.OnAddGems.RemoveListener(CurrencyService.AddGems);
+            EventService.Instance.OnAddCoins.RemoveListener(CurrencyService.AddCoins);
+            EventService.Instance.OnSubtractGems.RemoveListener(CurrencyService.SubtractGems);
             EventService.Instance.OnCreateChests.RemoveListener(CreateChests);
         }
     }

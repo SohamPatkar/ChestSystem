@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace ChestSystem.Chest
 {
-    public class CollectedState<T> : IState where T : ChestController
+    public class CollectedState : IState
     {
         public ChestController Owner { get; set; }
-        private GenericStateMachine<T> stateMachine;
+        private ChestStateMachine stateMachine;
 
-        public CollectedState(GenericStateMachine<T> stateMachine) => this.stateMachine = stateMachine;
+        public CollectedState(ChestStateMachine stateMachine) => this.stateMachine = stateMachine;
 
 
         public void OnEnterState()
@@ -25,6 +25,11 @@ namespace ChestSystem.Chest
         }
 
         public void Update()
+        {
+
+        }
+
+        public void OnClick()
         {
 
         }
