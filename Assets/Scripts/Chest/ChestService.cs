@@ -22,29 +22,8 @@ namespace ChestSystem.Chest
 
         public void CreateChest(ChestScriptableObject chestScriptableObject, ChestView chestView, GameObject chestPanel)
         {
-
-            switch (chestScriptableObject.ChestType)
-            {
-                case ChestType.RARE:
-                    chestController = new RareChest(chestScriptableObject, chestView, chestPanel);
-                    chestControllers.Add(chestController);
-                    break;
-
-                case ChestType.LEGENDARY:
-                    chestController = new LegendaryChest(chestScriptableObject, chestView, chestPanel);
-                    chestControllers.Add(chestController);
-                    break;
-
-                case ChestType.COMMON:
-                    chestController = new CommonChest(chestScriptableObject, chestView, chestPanel);
-                    chestControllers.Add(chestController);
-                    break;
-
-                case ChestType.EPIC:
-                    chestController = new EpicChest(chestScriptableObject, chestView, chestPanel);
-                    chestControllers.Add(chestController);
-                    break;
-            }
+            chestController = new ChestController(chestScriptableObject, chestView, chestPanel);
+            chestControllers.Add(chestController);
         }
 
         public void EnqueueChest(ChestController chestController)
@@ -94,8 +73,7 @@ namespace ChestSystem.Chest
         private void StartUnlocking(ChestController chest)
         {
             currentlyUnlocking = chest;
-            chest.ChangeChestState(ChestState.Unlocking);
-            chest.MoveToState(ChestState.Unlocking);
+            chest.SetChestState(ChestState.Unlocking);
         }
 
         public void OnChestUnlocked(ChestController unlockedChest)

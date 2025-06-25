@@ -13,11 +13,15 @@ namespace ChestSystem.Chest
         [SerializeField] private Image chestSprite;
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI suggestedText;
+        [SerializeField] private GameObject confirmationPanel;
+        [SerializeField] private TextMeshProUGUI gemsButtonText;
+        [SerializeField] private Button openWithGems;
+        [SerializeField] private Button openWithoutGems;
 
         void Start()
         {
-            EventService.Instance.OnOpenWithGems.AddListener(chestController.OpenWithGems);
-            EventService.Instance.OnOpenWithoutGems.AddListener(chestController.OpenWithoutGems);
+            openWithGems.onClick.AddListener(chestController.OpenWithGems);
+            openWithoutGems.onClick.AddListener(chestController.OpenWithoutGems);
             SetTimerText(chestController.FormatTime(chestController.TimerText()));
         }
 
@@ -31,15 +35,29 @@ namespace ChestSystem.Chest
             chestSprite.sprite = image;
         }
 
+        public void SetGemsNeeded(int gems)
+        {
+            gemsButtonText.text = gems.ToString();
+        }
+
+        public void ShowConfirmationPanel()
+        {
+            confirmationPanel.SetActive(true);
+        }
+
         public void OnClickButton()
         {
-            GameService.Instance.UIService.GetChestController(chestController);
             chestController.OnClickChest();
         }
 
         public void SetTimerText(string time)
         {
             timerText.text = time;
+        }
+
+        public void DeactivateConfirmationPanel()
+        {
+            confirmationPanel.SetActive(false);
         }
 
         public void SetSuggestedText(string text)
@@ -50,12 +68,6 @@ namespace ChestSystem.Chest
         public void SetController(ChestController controller)
         {
             chestController = controller;
-        }
-
-        void OnDisable()
-        {
-            EventService.Instance.OnOpenWithGems.RemoveListener(chestController.OpenWithGems);
-            EventService.Instance.OnOpenWithoutGems.RemoveListener(chestController.OpenWithoutGems);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace ChestSystem.Chest
         public void OnEnterState();
         public void OnExitState();
         public void Update();
+        void OnClick();
     }
 }
 

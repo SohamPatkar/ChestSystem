@@ -20,8 +20,7 @@ namespace ChestSystem.Chest
 
         public void Undo()
         {
-            chestController.ChangeChestState(ChestState.Locked);
-            chestController.MoveToState(ChestState.Locked);
+            chestController.SetChestState(ChestState.Locked);
         }
     }
 }
