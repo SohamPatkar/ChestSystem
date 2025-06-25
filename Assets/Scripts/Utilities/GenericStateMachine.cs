@@ -33,6 +33,11 @@ namespace ChestSystem.Utilities
             currentState?.OnEnterState();
         }
 
+        public IState GetState()
+        {
+            return currentState;
+        }
+
         public void ChangeState(ChestState newState) => ChangeState(States[newState]);
     }
 }

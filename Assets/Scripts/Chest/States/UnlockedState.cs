@@ -14,7 +14,6 @@ namespace ChestSystem.Chest
 
         public void OnEnterState()
         {
-            Owner.ChangeChestState(ChestState.Unlocked);
             Owner.GetChestView().SetChestImage(Owner.chestScriptableObject.ChestOpen);
             Owner.GetChestView().SetSuggestedText("Collect");
         }
@@ -27,6 +26,12 @@ namespace ChestSystem.Chest
         public void Update()
         {
 
+        }
+        public void OnClick()
+        {
+            EventService.Instance.OnAddGems.InvokeEvent(Owner.GemsToCollect());
+            EventService.Instance.OnAddCoins.InvokeEvent(Owner.CoinsToCollect());
+            Owner.SetChestState(ChestState.Collected);
         }
     }
 }

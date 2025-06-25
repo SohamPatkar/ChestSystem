@@ -31,6 +31,12 @@ namespace ChestSystem.Chest
         {
 
         }
+
+        public void OnClick()
+        {
+            Owner.GetChestView().ShowConfirmationPanel();
+            Owner.GetChestView().SetGemsNeeded(Owner.GetGemsRequired());
+        }
     }
 }
 

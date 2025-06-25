@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ChestSystem.Main;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ChestSystem.Chest
@@ -27,40 +28,45 @@ namespace ChestSystem.Chest
         protected ChestView chestView;
         protected GameObject chestPanel;
         public ChestScriptableObject chestScriptableObject;
+        private ChestStateMachine chestStateMachine;
+        private ChestService chestService;
+        private int gemsCalcRequired = 10;
 
         public ChestController(ChestScriptableObject chestScriptableObject, ChestView chestView, GameObject chestPanel)
         {
             this.chestScriptableObject = chestScriptableObject;
             this.chestPanel = chestPanel;
             this.chestView = Object.Instantiate(chestView.gameObject, this.chestPanel.transform).GetComponent<ChestView>();
+            this.chestView.SetController(this);
+
+            Initialize();
         }
 
-        public virtual void UpdateChest() { }
+        private void Initialize()
+        {
+            CreateStateMachine();
+            chestView.SetChestImage(chestScriptableObject.ChestClosed);
+            SetChestState(ChestState.Locked);
+            chestService = GameService.Instance.ChestService;
+        }
+
+        private void CreateStateMachine() => chestStateMachine = new ChestStateMachine(this);
+
+        public virtual void UpdateChest()
+        {
+            chestStateMachine.Update();
+        }
 
         public virtual void OnClickChest()
         {
-            switch (chestScriptableObject.ChestState)
-            {
-                case ChestState.Locked:
-                    EventService.Instance.OnShowConfirmationPanel.InvokeEvent();
-                    EventService.Instance.OnSetGemsRequired.InvokeEvent(GetGemsRequired());
-                    break;
-
-                case ChestState.Unlocked:
-                    EventService.Instance.OnAddGems.InvokeEvent(GemsToCollect());
-                    EventService.Instance.OnAddCoins.InvokeEvent(CoinsToCollect());
-                    ChangeChestState(ChestState.Collected);
-                    MoveToState(ChestState.Collected);
-                    break;
-            }
+            chestStateMachine.GetState().OnClick();
         }
 
-        public virtual void ChangeChestState(ChestState state)
+        public void SetChestState(ChestState state)
         {
             chestScriptableObject.ChestState = state;
+            chestStateMachine.ChangeState(state);
         }
-
-        public virtual void MoveToState(ChestState chestState) { }
 
         public float TimerText()
         {
@@ -74,44 +80,39 @@ namespace ChestSystem.Chest
             return string.Format("{0:00}:{1:00}", minutes, seconds);
         }
 
-        public void OpenWithGems(ChestController chestController)
+        public void OpenWithGems()
         {
-            if (chestController == this)
+            GameService.Instance.CurrencyService.SubtractGems(GetGemsRequired());
+
+            if (GameService.Instance.CurrencyService.GetGems() < GetGemsRequired())
             {
-                GameService.Instance.SubtractGems(chestController.GetGemsRequired());
-
-                if (GameService.Instance.GetGems() < chestController.GetGemsRequired())
-                {
-                    return;
-                }
-
-                GameService.Instance.ChestService.PushUndo(new UndoUnlocked(this));
-                chestController.ChangeChestState(ChestState.Unlocked);
-                chestController.MoveToState(ChestState.Unlocked);
+                return;
             }
+
+            chestService.PushUndo(new UndoUnlocked(this));
+            SetChestState(ChestState.Unlocked);
+            chestView.DeactivateConfirmationPanel();
         }
 
-        public void OpenWithoutGems(ChestController chestController)
+        public void OpenWithoutGems()
         {
-            if (chestController == this)
-            {
-                chestView.SetSuggestedText("Queued");
-                GameService.Instance.ChestService.EnqueueChest(this);
-                GameService.Instance.ChestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
-            }
+            chestView.SetSuggestedText("Queued");
+            chestService.EnqueueChest(this);
+            chestService.PushUndo(new UndoQueue(GameService.Instance.ChestService, this));
+            chestView.DeactivateConfirmationPanel();
         }
 
-        private int GetGemsRequired()
+        public int GetGemsRequired()
         {
-            return (int)Mathf.Ceil(chestScriptableObject.Timer / 10);
+            return (int)Mathf.Ceil(chestScriptableObject.Timer / gemsCalcRequired);
         }
 
-        private int GemsToCollect()
+        public int GemsToCollect()
         {
             return Random.Range(chestScriptableObject.MinGems, chestScriptableObject.MaxGems);
         }
 
-        private int CoinsToCollect()
+        public int CoinsToCollect()
         {
             return Random.Range(chestScriptableObject.MinCoins, chestScriptableObject.MaxCoins);
         }

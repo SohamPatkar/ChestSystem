@@ -53,6 +53,11 @@ namespace ChestSystem.Chest
                 GameService.Instance.ChestService.OnChestUnlocked(Owner);
             }
         }
+
+        public void OnClick()
+        {
+
+        }
     }
 }
 

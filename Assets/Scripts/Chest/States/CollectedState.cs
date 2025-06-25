@@ -28,6 +28,11 @@ namespace ChestSystem.Chest
         {
 
         }
+
+        public void OnClick()
+        {
+
+        }
     }
 }
 
