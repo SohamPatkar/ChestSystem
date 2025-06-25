@@ -1,6 +1,4 @@
 using System;
-using ChestSystem.Main;
-using UnityEngine;
 
 namespace ChestSystem.Events
 {

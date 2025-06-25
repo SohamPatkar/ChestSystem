@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using ChestSystem.Main;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace ChestSystem.Chest
