@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace ChestSystem.Chest
 {
-    public class LockedState<T> : IState where T : ChestController
+    public class LockedState : IState
     {
         public ChestController Owner { get; set; }
-        private GenericStateMachine<T> stateMachine;
+        private ChestStateMachine stateMachine;
 
-        public LockedState(GenericStateMachine<T> stateMachine)
+        public LockedState(ChestStateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
         }

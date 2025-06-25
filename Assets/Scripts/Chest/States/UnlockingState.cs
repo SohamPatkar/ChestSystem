@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace ChestSystem.Chest
 {
-    public class UnlockingState<T> : IState where T : ChestController
+    public class UnlockingState : IState
     {
         public ChestController Owner { get; set; }
-        private GenericStateMachine<T> stateMachine;
+        private ChestStateMachine stateMachine;
         private float timer;
 
-        public UnlockingState(GenericStateMachine<T> stateMachine) => this.stateMachine = stateMachine;
+        public UnlockingState(ChestStateMachine stateMachine) => this.stateMachine = stateMachine;
 
         public void OnEnterState()
         {
