@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using ChestSystem.Utilities;
-using UnityEngine;
 
 namespace ChestSystem.Chest
 {
